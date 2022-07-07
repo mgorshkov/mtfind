@@ -1,7 +1,11 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <thread>
+#include <algorithm>
+#include <filesystem>
+#include <assert.h>
 
 #include "StatCollector.hpp"
 #include "ThreadedMatcher.hpp"
@@ -26,8 +30,8 @@ static void run(std::istream &infile, uintmax_t filesize, const Mask &mask) {
                 sizeRead += line.size();
                 ++lineNumberDiff;
                 Buffer newBuffer{new char[bufferSize + line.size()]};
-                memcpy(newBuffer.get(), buffer.get(), bufferSize);
-                memcpy(newBuffer.get() + bufferSize, line.c_str(), line.size());
+                std::memcpy(newBuffer.get(), buffer.get(), bufferSize);
+                std::memcpy(newBuffer.get() + bufferSize, line.c_str(), line.size());
                 matcher->match({std::move(newBuffer), sizeRead, lineNumber});
             } else {
                 matcher->match({std::move(buffer), sizeRead, lineNumber});

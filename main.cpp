@@ -17,13 +17,13 @@ static void run(std::istream &infile, uintmax_t filesize, const Mask &mask) {
     StatCollector statCollector;
     {
         std::unique_ptr<IMatcher> matcher = std::make_unique<ThreadedMatcher>(&statCollector, nThreads, mask);
-        const std::size_t bufferSize = filesize / nThreads;
+        const std::size_t bufferSize = static_cast<std::size_t>(filesize) / nThreads;
         long lineNumber = 1;
         while (infile) {
             Buffer buffer{new char[bufferSize]};// read by large chunks to improve performance
             infile.read(buffer.get(), bufferSize);
             long lineNumberDiff = std::count(buffer.get(), buffer.get() + bufferSize, '\n');
-            std::size_t sizeRead = infile.gcount();
+            auto sizeRead = static_cast<std::size_t>(infile.gcount());
             if (infile) {// extend the buffer by reading more until a line separator or eof
                 std::string line;
                 std::getline(infile, line);

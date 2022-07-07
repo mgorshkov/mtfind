@@ -25,7 +25,7 @@ static int pin_to_cpu(pthread_t thread_handle, int cpu) {
 ThreadedMatcher::ThreadedMatcher(IStatCollector *statCollector, unsigned int nThreads, Mask mask)
     : m_statCollector(statCollector), m_mask{std::move(mask)} {
     m_finalize.store(false);
-    for (int i = 0; i < nThreads; ++i) {
+    for (unsigned int i = 0; i < nThreads; ++i) {
         m_threadPool.emplace_back(&ThreadedMatcher::threadProc, this);
 #ifdef __gnu_linux__
         const int cpu = i % nThreads;

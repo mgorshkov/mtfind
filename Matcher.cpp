@@ -13,16 +13,17 @@ Matcher::Matcher(IStatCollector *statCollector, Mask mask)
 void Matcher::match(BufferInfo &&bufferInfo) {
     auto maskSize = m_mask.size();
     auto lineNumber = bufferInfo.startingLineNumber;
-    if (bufferInfo.size < maskSize) {
+    if (bufferInfo.size + bufferInfo.sizeExt < maskSize) {
         return;
     }
     int pos = 1;
     bool skipRestOfLine = false;
-    for (std::size_t offset = 0; offset < bufferInfo.size - maskSize; ++offset) {
+    for (std::size_t offset = 0; offset < bufferInfo.size + bufferInfo.sizeExt - maskSize; ++offset) {
         std::string match;
         std::size_t i = 0;
         for (; i < maskSize; ++i) {
-            auto symbol = bufferInfo.buffer.get()[offset + i];
+            auto symbol = offset < bufferInfo.size ? bufferInfo.buffer.get()[offset + i] :
+                          bufferInfo.bufferExt.get()[offset - bufferInfo.size + i];
             if (symbol == '\n' || symbol == '\r') {
                 ++lineNumber;
                 pos = 0;

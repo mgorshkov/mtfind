@@ -29,12 +29,11 @@ static void run(std::istream &infile, uintmax_t filesize, const Mask &mask) {
                 std::getline(infile, line);
                 sizeRead += line.size();
                 ++lineNumberDiff;
-                Buffer newBuffer{new char[bufferSize + line.size()]};
-                std::memcpy(newBuffer.get(), buffer.get(), bufferSize);
-                std::memcpy(newBuffer.get() + bufferSize, line.c_str(), line.size());
-                matcher->match({std::move(newBuffer), sizeRead, lineNumber});
+                Buffer newBuffer{new char[line.size()]};
+                std::memcpy(newBuffer.get(), line.c_str(), line.size());
+                matcher->match({std::move(buffer), sizeRead, std::move(newBuffer), line.size(), lineNumber});
             } else {
-                matcher->match({std::move(buffer), sizeRead, lineNumber});
+                matcher->match({std::move(buffer), sizeRead, nullptr, 0, lineNumber});
             }
             lineNumber += lineNumberDiff;
         }

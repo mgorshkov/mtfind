@@ -10,6 +10,8 @@ public:
     struct BufferInfo {
         Buffer buffer;
         std::size_t size;
+        Buffer bufferExt;
+        std::size_t sizeExt;
         long startingLineNumber;
     };
 

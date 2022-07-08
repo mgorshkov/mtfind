@@ -23,15 +23,15 @@ static void run(std::istream &infile, uintmax_t filesize, const Mask &mask) {
             Buffer buffer{new char[bufferSize]};// read by large chunks to improve performance
             infile.read(buffer.get(), bufferSize);
             long lineNumberDiff = std::count(buffer.get(), buffer.get() + bufferSize, '\n');
-            auto sizeRead = static_cast<std::size_t>(infile.gcount());
+            const auto sizeRead = static_cast<std::size_t>(infile.gcount());
             if (infile) {// extend the buffer by reading more until a line separator or eof
                 std::string line;
                 std::getline(infile, line);
-                sizeRead += line.size();
                 ++lineNumberDiff;
-                Buffer newBuffer{new char[line.size()]};
-                std::memcpy(newBuffer.get(), line.c_str(), line.size());
-                matcher->match({std::move(buffer), sizeRead, std::move(newBuffer), line.size(), lineNumber});
+                const auto lineSize = line.size();
+                Buffer newBuffer{new char[lineSize]};
+                std::memcpy(newBuffer.get(), line.c_str(), lineSize);
+                matcher->match({std::move(buffer), sizeRead, std::move(newBuffer), lineSize, lineNumber});
             } else {
                 matcher->match({std::move(buffer), sizeRead, nullptr, 0, lineNumber});
             }

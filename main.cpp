@@ -1,11 +1,11 @@
+#include <algorithm>
+#include <assert.h>
+#include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <cstring>
 #include <thread>
-#include <algorithm>
-#include <filesystem>
-#include <assert.h>
 
 #include "StatCollector.hpp"
 #include "ThreadedMatcher.hpp"
